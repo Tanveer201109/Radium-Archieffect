@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Radium Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #050505;
+        color: #ffffff;
+        font-family: 'Rajdhani', sans-serif;
+        overflow: hidden;
+      }
+      
+      /* Scrollbar Customization */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0a0a0a; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333; 
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ff003c; 
+      }
+
+      /* Animations */
+      @keyframes drift {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(20px, -20px); }
+        100% { transform: translate(0, 0); }
+      }
+      
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 5px #ff003c, 0 0 10px #ff003c inset; }
+        50% { box-shadow: 0 0 20px #ff003c, 0 0 15px #ff003c inset; }
+      }
+
+      @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+      }
+
+      .scanline-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+        background-size: 100% 4px;
+        z-index: 50;
+        opacity: 0.15;
+      }
+
+      .code-font {
+        font-family: 'JetBrains Mono', monospace;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/common": "https://esm.sh/@angular/common@^21.1.3?external=rxjs",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0?external=rxjs",
+    "@angular/core": "https://esm.sh/@angular/core@^21.1.3?external=rxjs",
+    "@angular/forms": "https://esm.sh/@angular/forms@^21.1.3?external=rxjs",
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.3?external=rxjs",
+    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.3?external=rxjs"
+  }
+}
+</script>
+</head>
+  <body>
+    <app-root></app-root>
+    <div class="scanline-overlay"></div>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "Radium Architect",
+  "description": "A futuristic, voice-activated software generation interface with a radium-smoke aesthetic.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
