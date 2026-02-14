@@ -1,164 +1,261 @@
-
-<!-- Background Effects -->
-<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-black">
-  <!-- Moving Smoke/Blur Blobs -->
-  <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-red-900 rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-[drift_20s_infinite_alternate]"></div>
-  <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-zinc-800 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-[drift_25s_infinite_alternate-reverse]"></div>
-  <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] bg-[#ff003c] rounded-full mix-blend-overlay filter blur-[150px] opacity-10 animate-[drift_30s_infinite_linear]"></div>
+<!-- Dynamic Background Effects -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-black transition-colors duration-1000">
+  <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-[drift_20s_infinite_alternate] transition-colors duration-1000"
+    [class]="currentTheme().smoke1"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-[drift_25s_infinite_alternate-reverse] transition-colors duration-1000"
+    [class]="currentTheme().smoke2"></div>
+  <div class="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full mix-blend-overlay filter blur-[150px] opacity-15 animate-[drift_30s_infinite_linear] transition-colors duration-1000"
+    [class]="currentTheme().blobColor"></div>
 </div>
 
-<main class="relative z-10 flex flex-col h-screen max-h-screen w-full font-sans text-white">
-  
-  <!-- Header -->
-  <header class="flex-none p-6 flex justify-between items-center border-b border-white/10 bg-black/40 backdrop-blur-md">
-    <div class="flex items-center gap-3">
-      <div class="w-3 h-3 bg-[#ff003c] rounded-full animate-pulse shadow-[0_0_10px_#ff003c]"></div>
-      <h1 class="text-2xl font-bold tracking-widest uppercase">
-        <span class="text-white">Radium</span><span class="text-[#ff003c]">Architect</span>
+<main class="relative z-10 flex h-screen max-h-screen w-full font-sans text-white">
+
+  <!-- Sidebar Navigation -->
+  <aside class="w-64 flex-none flex flex-col bg-black/40 border-r border-white/5 backdrop-blur-xl p-4">
+    <div class="flex items-center gap-3 pb-4 border-b border-white/5">
+      <div class="w-3 h-3 rounded-full animate-pulse transition-all duration-500"
+        [style.background-color]="currentTheme().accent"
+        [style.box-shadow]="'0 0 10px ' + currentTheme().accent"></div>
+      <h1 class="text-lg font-bold tracking-widest uppercase">
+        <span class="text-white/80">TANVEER</span><span [style.color]="currentTheme().accent">NANO</span>
       </h1>
     </div>
-    
-    @if (generatedProject()) {
-      <button (click)="reset()" class="px-4 py-2 text-sm text-gray-400 hover:text-white border border-white/10 hover:border-[#ff003c] rounded transition-all duration-300">
-        NEW PROJECT
+
+    <nav class="mt-8 space-y-2">
+      <button (click)="goToDashboard()" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors"
+        [class.bg-white/5]="appMode() === 'DASHBOARD'"
+        [class.text-white]="appMode() === 'DASHBOARD'"
+        [class.text-gray-400]="appMode() !== 'DASHBOARD'"
+        [class.hover:bg-white/5]="appMode() !== 'DASHBOARD'"
+        [class.hover:text-white]="appMode() !== 'DASHBOARD'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+        <span>Dashboard</span>
       </button>
-    }
-  </header>
+      <button (click)="startNewChat()" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors"
+        [class.bg-white/5]="appMode() === 'CHAT'"
+        [class.text-white]="appMode() === 'CHAT'"
+        [class.text-gray-400]="appMode() !== 'CHAT'"
+        [class.hover:bg-white/5]="appMode() !== 'CHAT'"
+        [class.hover:text-white]="appMode() !== 'CHAT'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Chat Prompt</span>
+      </button>
+      <button (click)="startNewCodeProject()" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors"
+        [class.bg-white/5]="appMode() === 'CODE'"
+        [class.text-white]="appMode() === 'CODE'"
+        [class.text-gray-400]="appMode() !== 'CODE'"
+        [class.hover:bg-white/5]="appMode() !== 'CODE'"
+        [class.hover:text-white]="appMode() !== 'CODE'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+        <span>Code Architect</span>
+      </button>
+    </nav>
+  </aside>
 
-  <!-- Content Area -->
-  <div class="flex-1 overflow-hidden relative flex flex-col items-center justify-center p-4">
-    
-    <!-- Initial Prompt Interface -->
-    @if (!generatedProject() && !isGenerating()) {
-      <div class="w-full max-w-2xl flex flex-col gap-6 animate-[fadeIn_0.5s_ease-out]">
-        <div class="text-center space-y-2 mb-8">
-          <h2 class="text-4xl font-light tracking-tight">System Ready.</h2>
-          <p class="text-white/50">Describe the software architecture you require.</p>
-        </div>
-
-        <div class="relative group">
-          <div class="absolute -inset-0.5 bg-gradient-to-r from-[#ff003c] to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-          <div class="relative bg-black rounded-lg border border-white/10 p-1">
-            <textarea 
-              [(ngModel)]="userPrompt"
-              placeholder="E.g., A secure chat application using WebSockets..."
-              class="w-full h-32 bg-transparent text-lg p-4 focus:outline-none resize-none placeholder-white/20 text-white font-light"
-            ></textarea>
-            
-            <div class="flex justify-between items-center p-2 border-t border-white/5">
-              <button 
-                (click)="toggleRecording()"
-                [class.text-[#ff003c]]="isRecording()"
-                [class.animate-pulse]="isRecording()"
-                class="p-3 rounded-full hover:bg-white/5 transition-colors text-white/60 hover:text-[#ff003c]"
-                title="Voice Input"
-              >
-                <!-- Mic Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-              </button>
-
-              <button 
-                (click)="generateSoftware()"
-                [disabled]="!userPrompt().trim()"
-                class="bg-[#ff003c] text-black font-bold py-2 px-6 rounded hover:bg-[#ff3366] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_rgba(255,0,60,0.4)] hover:shadow-[0_0_25px_rgba(255,0,60,0.6)]"
-              >
-                INITIATE
-              </button>
-            </div>
-          </div>
-        </div>
-
-        @if (error()) {
-          <div class="text-red-500 bg-red-950/30 border border-red-500/30 p-4 rounded text-center backdrop-blur-sm">
-            {{ error() }}
-          </div>
-        }
-      </div>
-    }
-
-    <!-- Loading State -->
-    @if (isGenerating()) {
-      <div class="flex flex-col items-center gap-6">
-        <div class="relative w-24 h-24">
-          <div class="absolute inset-0 rounded-full border-2 border-t-[#ff003c] border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
-          <div class="absolute inset-2 rounded-full border-2 border-b-[#ff003c] border-t-transparent border-l-transparent border-r-transparent animate-spin direction-reverse duration-700"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-2 h-2 bg-[#ff003c] rounded-full animate-ping"></div>
-          </div>
-        </div>
-        <div class="text-[#ff003c] font-mono tracking-widest animate-pulse">ARCHITECTING SOLUTION...</div>
-        <div class="text-xs text-white/40 font-mono">
-          Compiling Requirements <br>
-          Analyzing Dependencies <br>
-          Generating File Matrix
-        </div>
-      </div>
-    }
-
-    <!-- Project View Interface -->
-    @if (generatedProject()) {
-      <div class="w-full h-full flex gap-4 p-2 max-w-7xl animate-[fadeIn_0.5s_ease-out]">
-        
-        <!-- Sidebar -->
-        <div class="w-64 flex-none flex flex-col bg-black/60 border border-white/10 rounded-lg backdrop-blur-md overflow-hidden">
-          <div class="p-4 border-b border-white/10 bg-white/5">
-            <h3 class="font-bold text-sm text-white/80 uppercase tracking-wider">Project Files</h3>
-          </div>
-          <div class="flex-1 overflow-y-auto p-2 space-y-1">
-            @for (file of generatedProject()?.files; track file.name) {
-              <button 
-                (click)="selectFile(file)"
-                class="w-full text-left px-3 py-2 rounded text-sm font-mono transition-all duration-200 border border-transparent"
-                [class.bg-[#ff003c]/20]="selectedFile() === file"
-                [class.text-[#ff003c]]="selectedFile() === file"
-                [class.border-[#ff003c]/30]="selectedFile() === file"
-                [class.text-gray-400]="selectedFile() !== file"
-                [class.hover:bg-white/5]="selectedFile() !== file"
-                [class.hover:text-white]="selectedFile() !== file"
-              >
-                {{ file.name }}
-              </button>
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col">
+    <!-- Header -->
+    <header class="flex-none p-4 flex justify-between items-center border-b border-white/5 bg-transparent">
+        <h2 class="text-xl font-thin tracking-tighter text-white/80">
+            @switch (appMode()) {
+                @case ('DASHBOARD') { Welcome to the Studio }
+                @case ('CHAT') { Conversation Matrix }
+                @case ('CODE') { Project Genesis }
             }
-          </div>
+        </h2>
+        <div class="text-xs font-mono uppercase tracking-widest text-gray-500">
+            Persona: <span [style.color]="currentTheme().accent">{{ currentTheme().name }}</span>
         </div>
+    </header>
 
-        <!-- Code Editor -->
-        <div class="flex-1 flex flex-col bg-[#0a0a0a] border border-white/10 rounded-lg overflow-hidden shadow-2xl relative">
-          <!-- Editor Header -->
-          <div class="flex items-center justify-between px-4 py-2 bg-[#111] border-b border-white/10">
-            <span class="text-sm text-gray-400 font-mono">{{ selectedFile()?.name }}</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-gray-600 uppercase">{{ selectedFile()?.language }}</span>
-              <button (click)="copyCode()" class="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white transition-colors" title="Copy Code">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-              </button>
-            </div>
-          </div>
+    <!-- Dynamic Content -->
+    <main class="flex-1 overflow-hidden p-4">
+        @switch (appMode()) {
+            
+            <!-- DASHBOARD VIEW -->
+            @case ('DASHBOARD') {
+                <div class="w-full h-full flex flex-col items-center justify-center gap-10 animate-[fadeIn_0.5s_ease-out]">
+                    <div class="text-center">
+                        <h2 class="text-5xl font-thin tracking-tighter text-white">AI <span [style.color]="currentTheme().accent">STUDIO</span></h2>
+                        <p class="text-white/40 font-mono text-xs tracking-[0.3em] uppercase mt-2">Create Anything</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- New Chat -->
+                        <button (click)="startNewChat()" class="p-8 rounded-2xl bg-black/40 border border-white/10 hover:border-white/30 transition-all duration-300 transform hover:-translate-y-1 group">
+                            <div class="flex flex-col items-center gap-4 text-center">
+                                <svg class="w-10 h-10 text-white/60 group-hover:text-white transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <h3 class="font-bold tracking-wider">Chat Prompt</h3>
+                                <p class="text-xs text-white/50">Start a new conversation with the selected AI persona.</p>
+                            </div>
+                        </button>
+                        <!-- New Code Project -->
+                        <button (click)="startNewCodeProject()" class="p-8 rounded-2xl bg-black/40 border border-white/10 hover:border-white/30 transition-all duration-300 transform hover:-translate-y-1 group">
+                             <div class="flex flex-col items-center gap-4 text-center">
+                                <svg class="w-10 h-10 text-white/60 group-hover:text-white transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+                                <h3 class="font-bold tracking-wider">Code Architect</h3>
+                                <p class="text-xs text-white/50">Generate a complete software project from a description.</p>
+                            </div>
+                        </button>
+                        <!-- Image Generation (Disabled) -->
+                        <div class="p-8 rounded-2xl bg-black/20 border border-white/5 text-center relative overflow-hidden cursor-not-allowed">
+                            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center">
+                                <span class="text-xs font-mono tracking-widest border border-white/20 px-3 py-1 rounded-full">COMING SOON</span>
+                            </div>
+                             <div class="flex flex-col items-center gap-4 text-center opacity-30">
+                                <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                <h3 class="font-bold tracking-wider">Image FX</h3>
+                                <p class="text-xs text-white/50">Generate stunning visuals from text prompts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
-          <!-- Editor Body -->
-          <div class="flex-1 overflow-auto relative custom-scrollbar bg-[#050505]/80">
-            <pre class="p-4 text-sm font-mono leading-relaxed"><code class="language-{{selectedFile()?.language}} text-gray-300">{{ selectedFile()?.content }}</code></pre>
-          </div>
-          
-          <!-- Decorative Bottom Bar -->
-          <div class="h-1 w-full bg-gradient-to-r from-transparent via-[#ff003c] to-transparent opacity-50"></div>
-        </div>
+            <!-- CHAT VIEW -->
+            @case ('CHAT') {
+                <div class="w-full h-full flex flex-col max-w-4xl mx-auto animate-[fadeIn_0.5s_ease-out]">
+                    <!-- Message History -->
+                    <div #chatContainer class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6">
+                      @for (message of chatHistory(); track $index) {
+                        <div class="flex gap-4" [class.flex-row-reverse]="message.role === 'user'">
+                           <div class="w-8 h-8 rounded-full flex-shrink-0" [style.background-color]="message.role === 'model' ? currentTheme().accent : 'rgba(255,255,255,0.1)'"></div>
+                           <div class="p-4 rounded-lg max-w-xl" [class.bg-black/40]="message.role === 'user'" [class.bg-white/5]="message.role === 'model'">
+                                <p class="text-white/90 whitespace-pre-wrap">{{ message.text }}</p>
+                           </div>
+                        </div>
+                      }
+                      @if (isThinking()) {
+                        <div class="flex gap-4">
+                           <div class="w-8 h-8 rounded-full flex-shrink-0 animate-pulse" [style.background-color]="currentTheme().accent"></div>
+                           <div class="p-4 rounded-lg bg-white/5">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full animate-ping" [style.background-color]="currentTheme().accent"></div>
+                                    <span class="text-sm text-white/50">Thinking...</span>
+                                </div>
+                           </div>
+                        </div>
+                      }
+                    </div>
 
-      </div>
-    }
+                    <!-- Input Area -->
+                    <div class="w-full relative group mt-4">
+                      <div class="absolute -inset-1 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"
+                           [style.background]="'linear-gradient(to right, ' + currentTheme().accent + ', transparent)'"></div>
+                      <div class="relative bg-black/80 rounded-2xl border border-white/10 p-2 backdrop-blur-xl">
+                        <textarea [(ngModel)]="userPrompt" (keydown.enter)="sendChatMessage()" placeholder="Send a message..."
+                          class="w-full h-24 bg-transparent text-lg p-4 focus:outline-none resize-none placeholder-white/20 text-white font-light"></textarea>
+                        <div class="flex justify-between items-center p-2 border-t border-white/5">
+                          <button (click)="toggleRecording()" title="Voice Input" class="p-3 rounded-full hover:bg-white/5 transition-colors text-white/60"
+                            [style.color]="isRecording() ? currentTheme().accent : ''" [class.animate-pulse]="isRecording()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                          </button>
+                          <button (click)="sendChatMessage()" [disabled]="!userPrompt().trim() || isThinking()"
+                            class="text-black font-bold text-xs tracking-widest py-3 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-95 hover:brightness-110"
+                            [style.background-color]="currentTheme().accent"
+                            [style.box-shadow]="'0 0 30px ' + currentTheme().accent + '44'">SEND</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            }
 
+            <!-- CODE VIEW -->
+            @case ('CODE') {
+                <div class="w-full h-full flex flex-col">
+                    @if (!generatedProject() && !isGenerating()) {
+                        <!-- Code Prompt UI -->
+                        <div class="flex-1 flex flex-col items-center justify-center gap-12 animate-[fadeIn_0.5s_ease-out]">
+                            <!-- Welcome Text -->
+                            <div class="text-center space-y-2">
+                                <h2 class="text-5xl font-thin tracking-tighter text-white">CODE <span [style.color]="currentTheme().accent">ARCHITECT</span></h2>
+                                <p class="text-white/40 font-mono text-xs tracking-[0.3em] uppercase">Describe the software you want to build</p>
+                            </div>
+                             <!-- Persona Selector -->
+                            <div class="grid grid-cols-3 md:grid-cols-6 gap-6 justify-items-center items-center">
+                                @for (p of ['GEMINI_PRO', 'GEMINI_3_PRO', 'GROK_X', 'X_AI', 'COPILOT_MAX', 'GEMINI_NANO_BANA']; track p) {
+                                    <button (click)="setPersona($any(p))"
+                                        class="flex flex-col items-center gap-2 group relative transition-all duration-300"
+                                        [class.opacity-100]="selectedPersona() === p"
+                                        [class.opacity-40]="selectedPersona() !== p"
+                                        [class.scale-110]="selectedPersona() === p">
+                                        <div class="w-12 h-12 rounded-full border-2 flex items-center justify-center"
+                                            [class.border-current]="selectedPersona() === p"
+                                            [class.border-white/20]="selectedPersona() !== p"
+                                            [style.color]="currentTheme().accent">
+                                        </div>
+                                    </button>
+                                }
+                            </div>
+                            <!-- Input Area -->
+                            <div class="w-full max-w-2xl relative group mt-4">
+                                <div class="absolute -inset-1 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"
+                                    [style.background]="'linear-gradient(to right, ' + currentTheme().accent + ', transparent)'"></div>
+                                <div class="relative bg-black/80 rounded-2xl border border-white/10 p-2 backdrop-blur-xl">
+                                    <textarea [(ngModel)]="userPrompt" placeholder="Initialize structural parameters..." class="w-full h-24 bg-transparent text-lg p-4 focus:outline-none resize-none placeholder-white/20 text-white font-light"></textarea>
+                                    <div class="flex justify-between items-center p-2 border-t border-white/5">
+                                        <button (click)="toggleRecording()" title="Voice Input" class="p-3 rounded-full hover:bg-white/5 transition-colors text-white/60"
+                                            [style.color]="isRecording() ? currentTheme().accent : ''" [class.animate-pulse]="isRecording()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                                        </button>
+                                        <button (click)="generateSoftware()" [disabled]="!userPrompt().trim()"
+                                            class="text-black font-bold text-xs tracking-widest py-3 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-95 hover:brightness-110"
+                                            [style.background-color]="currentTheme().accent"
+                                            [style.box-shadow]="'0 0 30px ' + currentTheme().accent + '44'">GENERATE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    } @else if (isGenerating()) {
+                        <!-- Loading State -->
+                        <div class="flex-1 flex flex-col items-center justify-center gap-8">
+                            <div class="relative w-32 h-32">
+                                <div class="absolute inset-0 rounded-full border border-dashed animate-[spin_4s_linear_infinite]" [style.border-color]="currentTheme().accent + '40'"></div>
+                                <div class="absolute inset-4 rounded-full border border-dotted animate-[spin_6s_linear_infinite_reverse]" [style.border-color]="currentTheme().accent + '80'"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-2 h-2 rounded-full animate-ping" [style.background-color]="currentTheme().accent"></div>
+                                </div>
+                            </div>
+                            <div class="font-mono text-xs tracking-[0.5em] animate-pulse uppercase" [style.color]="currentTheme().accent">Processing // {{ currentTheme().name }}</div>
+                        </div>
+                    } @else if (generatedProject()) {
+                        <!-- Project View -->
+                        <div class="w-full h-full flex gap-4 animate-[fadeIn_0.5s_ease-out]">
+                            <!-- Sidebar -->
+                            <div class="w-64 flex-none flex flex-col bg-black/40 border border-white/5 rounded-2xl backdrop-blur-xl overflow-hidden">
+                                <div class="p-4 border-b border-white/5 bg-white/5">
+                                    <h3 class="font-bold text-[10px] text-white/60 uppercase tracking-[0.2em]">Manifest // {{ selectedLanguage() }}</h3>
+                                </div>
+                                <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                                    @for (file of generatedProject()?.files; track file.name) {
+                                        <button (click)="selectFile(file)" class="w-full text-left px-4 py-3 rounded-lg text-xs font-mono transition-all duration-200 border border-transparent truncate"
+                                            [class.text-gray-500]="selectedFile() !== file"
+                                            [class.hover:text-white]="selectedFile() !== file"
+                                            [style.background-color]="selectedFile() === file ? currentTheme().accent + '0D' : ''"
+                                            [style.color]="selectedFile() === file ? currentTheme().accent : ''"
+                                            [style.border-color]="selectedFile() === file ? currentTheme().accent + '22' : ''">
+                                            {{ file.name }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            <!-- Code Editor -->
+                            <div class="flex-1 flex flex-col bg-[#080808] border border-white/5 rounded-2xl overflow-hidden shadow-2xl relative">
+                                <div class="flex items-center justify-between px-6 py-3 bg-[#0a0a0a] border-b border-white/5">
+                                    <span class="text-xs text-gray-400 font-mono tracking-wider">{{ selectedFile()?.name }}</span>
+                                    <button (click)="copyCode()" class="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors" title="Copy Code">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                    </button>
+                                </div>
+                                <div class="flex-1 overflow-auto relative custom-scrollbar bg-[#050505]/50">
+                                    <pre class="p-6 text-sm font-mono leading-relaxed"><code class="language-{{selectedFile()?.language}} text-gray-300">{{ selectedFile()?.content }}</code></pre>
+                                </div>
+                                <div class="h-[1px] w-full opacity-30" [style.background]="'linear-gradient(to right, transparent, ' + currentTheme().accent + ', transparent)'"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </main>
   </div>
-  
-  <!-- Footer Status Bar -->
-  <footer class="flex-none py-1 px-4 border-t border-white/10 bg-black/80 backdrop-blur text-[10px] text-gray-500 font-mono flex justify-between uppercase tracking-widest">
-    <div>Radium OS v1.0.4</div>
-    <div class="flex gap-4">
-      <span class="flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Online
-      </span>
-      <span>Latency: 12ms</span>
-      <span>Mem: 45%</span>
-    </div>
-  </footer>
-
 </main>
