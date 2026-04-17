@@ -15,7 +15,7 @@ export interface SoftwareProject {
 
 export type ArchitectPersona = 
   'GEMINI_PRO' | 
-  'GEMINI_3_PRO' | 
+  'GEMINI_3_PRO' |
   'GROK_X' | 
   'X_AI' |
   'COPILOT_MAX' | 
@@ -117,5 +117,19 @@ export class GeminiService {
     }
     
     throw new Error("Failed to generate software");
+  }
+
+  async generateImage(prompt: string): Promise<string> {
+    // Simulate a network request delay for a better user experience.
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Use a placeholder image service to simulate image generation for free.
+    // This avoids needing a real API key and fulfills the "free" requirement.
+    // The prompt is not actually used by picsum.photos, but we keep the parameter
+    // to match the component's method call.
+    // We add a timestamp to the URL to bypass browser cache and get a new image every time.
+    const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
+    
+    return imageUrl;
   }
 }
